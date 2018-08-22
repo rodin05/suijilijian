@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta https-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no, initial-scale=1">
+    <meta name="format-detection" content="telephone=no"><!--防止iOS网页中的数字被识别为电话号码-->
+    <meta name="screen-orientation" content="portrait"><!-- uc强制竖屏 -->
+    <meta name="x5-orientation" content="portrait"><!-- QQ强制竖屏 -->
+    <meta http-equiv="pragma" content="no-cache" />
+    <title>订单随机立减</title>
+    <script>
+        if (/Android (\d+\.\d+)/.test(navigator.userAgent)) {//安卓
+            var version = parseFloat(RegExp.$1);
+            if (version > 2.3) {
+                var phoneScale = parseInt(window.screen.width) / 750;
+                document.write('<meta name="viewport" content="width=750, minimum-scale = ' + phoneScale + ', maximum-scale = ' + phoneScale + ', target-densitydpi=device-dpi,user-scalable=no">');
+            } else {
+                document.write('<meta name="viewport" content="width=750, target-densitydpi=device-dpi,user-scalable=no">');
+            }
+        } else {
+            document.write('<meta name="viewport" content="width=750, user-scalable=no, target-densitydpi=device-dpi">');
+        }
+    </script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-18761483-4', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            box-sizing: border-box;
+        }
+
+        HTML, body {
+            height: 100%;
+            width: 100%;
+            font-family: "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+            background: #ffffff
+        }
+
+        #share_iframe {
+            display: none;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        input, input[type="button"], input[type="submit"], input[type="reset"] {
+            -webkit-appearance: none;
+            color: slateblue;
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .logo {
+            padding-top: 50px;
+        }
+
+        .logo .head {
+            text-align: center;
+        }
+
+        .logo .text {
+            color: #878787;
+            line-height: 34px;
+            font-size: 25px;
+            width: 544px;
+            margin: 0 auto;
+            display: block;
+            margin-top: 30px;
+        }
+
+        .clearfix:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .clearfix {
+            *zoom: 1;
+        }
+
+        .appear .on-input {
+            width: 544px; margin: 0 auto;
+        }
+        #app{
+            position: relative;
+        }
+
+        .appear .on-input input {
+            outline: none;
+            display: block;
+            width: 100%;
+            color: #a9a9a9;
+            font-size: 28px;
+            background: #f2f2f2;
+            border-radius: 38px;
+            box-sizing: border-box;
+            height: 76px;
+            line-height: 76px;
+            border: 1px solid #d2d2d2;
+            padding-left: 26px
+        }
+
+        .appear .on-input input::-webkit-input-placeholder {
+            color: #a9a9a9;
+            font-size: 28px;
+        }
+
+        .appear .on-code {
+            width: 544px; margin: 0 auto;
+            margin-top: 18px;
+        }
+
+        .appear .on-input-code {
+            float: left;
+            width: 330px;
+        }
+
+        .appear .getCode {
+            float: right;
+            width: 200px;
+            background: #ff6654;
+            color: #fff;
+            border-radius: 38px;
+            font-size: 25px;
+            line-height: 76px;
+            height: 76px;
+            text-align: center;border: none;
+            outline: none;
+        }
+
+        .appear .getCode.stop {
+            background: #abaccc;
+        }
+
+        .appear .btn {
+            text-align: center;
+            margin-top: 28px;
+        }
+
+        .appear .btn img {
+            display: inline-block;
+        }
+        .panelScroll{
+            font-size: 26px;
+            color: #ff6654;
+            margin: 23px auto 28px;
+            width: 521px;
+            height: 35px;
+            overflow: hidden;white-space: nowrap
+        }
+        .login{
+            padding-top: 54px;
+        }
+        .undertext{
+            color: #f04632;
+            font-size: 29px;
+            margin: 26px auto 82px;
+            text-align: center;
+        }
+        .underLine{
+            width: 569px;
+            height: 1px;
+            background: #b0b0b0;
+            margin: 0 auto;
+        }
+
+
+        /*.appear .getImageCodeUrl {*/
+            /*width: 2.6rem;*/
+            /*height: 1.15rem;*/
+            /*float: right;*/
+        /*}*/
+
+        /*.appear .getImageCodeUrl img {*/
+            /*width: 100%;*/
+        /*}*/
+        .rule{
+            width: 569px;
+            margin: 0 auto;
+        }
+        .rule h3{
+            margin: 26px 0 24px 0;
+            color: #424242;
+            font-size: 28px;height: 28px;
+        }
+        .rule h3 span{
+            height: 100%;
+            width: 8px;
+            background: #ff7d55;
+            display: inline-block;
+            vertical-align: center;
+            margin-right: 20px;
+            position: relative;
+            top: 2px;
+        }
+        .rule p{
+            color: #424242;
+            font-size: 24px;line-height: 32px;margin-bottom: 16px;
+        }
+        .rule i{
+            color: #989898;
+            font-size: 20px;
+        }
+        .toast{
+            z-index: 100;
+            position: fixed;
+            top: 620px;width: 100%;
+        }
+        .toast img{
+            width: 354px;margin: 0 auto;display: block;
+        }
+        .picCode{
+            position: absolute; top: 0; left: 0;  width: 100%; height: 100%;z-index: -1; text-align: center;background: rgba(0,0,0,.7);
+        }
+        .picCode .wrapper{
+            position: absolute;
+            top: 569px;
+            left: 70px;
+            right: 70px;
+            box-sizing: border-box;
+            background: #ffffff;
+            height: 284px;border-radius: 20px;padding: 50px 64px;
+        }
+        .picCode .close{
+            position: absolute;
+            top: 901px;
+            width: 100%;
+            text-align: center;
+            left: 0;
+        }
+        .picCode .on-code .on-input{
+            float: left;
+            width: 258px;
+        }
+        .picCode .on-code .on-input input{
+            outline: none;
+            display: block;
+            width: 100%;
+            color: #a9a9a9;
+            font-size: 24px;
+            background: #f2f2f2;
+            border-radius: 35px;
+            box-sizing: border-box;
+            height: 70px;
+            line-height: 70px;
+            border: 1px solid #d2d2d2;
+            padding-left: 22px
+        }
+        .picCode .on-code .getImageCodeUrl{
+           float: right;
+        }
+        .picCode .on-code .getImageCodeUrl .imgCode{
+            width: 157px;height: 70px;
+        }
+        .picCode .on-code .getImageCodeUrl .refreshpic{
+            width: 39px;height: 70px;background: url("//i3.Yongche.name/media/g2/M03/13/21/rBEBP1qrg8-IeovnAAACpUwETxYAAHm5wP__G0AAAOT308.png") no-repeat center;display: inline-block;
+        }
+        .picCode .wrapper .sure{
+            height: 74px;
+            line-height: 74px;
+            background: #ff6654;
+            border-radius: 37px;
+            font-size: 36px;
+            color: #fff;
+            margin-top: 40px;
+        }
+        .success .wrapperbox{
+            position: absolute;
+            top: 414px;
+            left: 70px;
+            right: 70px;
+            box-sizing: border-box;
+            background: #ffffff;
+            height: 500px;border-radius: 20px;padding: 76px 80px 60px;
+        }
+        .success .wrapperbox .togo{
+            height: 82px;
+            line-height: 82px;
+            background: #ff6654;
+            border-radius: 41px;
+            font-size: 35px;
+            color: #fff;
+            margin-top: 85px;
+        }
+        .success .wrapperbox p{
+            font-size: 46px; color: #ff7d55;margin-top: 30px;
+        }
+        .daojishi{
+            margin: 116px auto 143px;width: 544px;
+        }
+        .daojishi h3{
+            font-size: 42px;
+            color: #ff7d55;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        .daojishi .timing{
+            height: 124px;
+        }
+        .daojishi .timing span{
+            display: inline-block;
+            height: 124px;
+        }
+        .daojishi .timing span:nth-child(odd){
+            width: 87px;background: url("//i1.Yongche.name/media/g2/M04/1D/0B/rBEBP1qrhAaIe_hiAAADOKEzhjMAALWvwP__HsAAAOF731.png") no-repeat center;line-height: 124px;
+            vertical-align: text-bottom;
+            text-align: center;font-size: 49px;font-weight: 600;
+            color: #424242;
+
+        }
+        .daojishi .timing span:nth-child(even){
+            margin: 0 6px;
+            line-height: 124px;
+            vertical-align: text-bottom;
+            font-size: 27px;
+            color: #878787;
+        }
+        .scroller{
+            margin: 82px auto;
+            width: 544px;
+            color: #ff7d55;
+            font-size: 29px;
+            /* text-align: center; */
+            padding-left: 65px;
+        }
+        .rollwrapper .list-item{
+            /*height: 336px;*/
+            line-height: 56px;
+        }
+        #rollid{
+            overflow: hidden;
+            height: 336px;
+        }
+        #scroll_begin,#scroll_end {display: inline;height: 100%}
+        .showPicCode{
+            opacity: 0;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <div class="logo">
+        <div class="head" v-if="!inApp && begin">
+            <img src="//i2.Yongche.name/media/g1/M01/1E/0C/rBEARFqrhCCIPfuOAAAu-90xnwMAAL2DAKmL34AAC8T236.png" alt="">
+        </div>
+        <div class="head" v-else>
+            <img src="//i3.Yongche.name/media/g1/M01/1E/0C/rBEARFqrhDSIWrAyAAAvKhoR9YAAAL2DAMKApoAAC9C800.png" alt="">
+        </div>
+        <span class="text">3月26日起，使用易到打车，每单均享受不同额度的立减，最高减全额。</span>
+    </div>
+    <div class="login appear" v-if="!inApp">
+        <div class="panelScroll" v-show="begin" id="panelScroll">
+            <div id="scroll_begin">
+                <span v-for="(item,index) in luckyList">{{item.cellphone}}&ensp;随机立减{{item.reduce_amount}}元；</span>
+            </div>
+            <div id="scroll_end">
+                <span v-for="(item,index) in luckyList">{{item.cellphone}}&ensp;随机立减{{item.reduce_amount}}元；</span>
+            </div>
+        </div>
+        <div class="on-input"><input name="number" type="tel" v-model="telNumber" placeholder="请输入手机号" maxlength="11"></div>
+        <div class="on-code clearfix">
+            <p class="on-input on-input-code"><input name="code" type="tel" v-model="codeNumber" placeholder="请输入短信验证码" maxlength="6">
+            </p>
+            <input class="getCode login-getcode get-msgcode" value="获取验证码" type="button" @click="getCode"></input>
+        </div>
+        <div class="btn">
+            <img src="//i2.Yongche.name/media/g2/M04/1D/12/rBEBJVqrhE6IOVZqAAAHApvYePYAALZcAG_8YgAAAca327.png" alt="" class="login-btn" @click="sureHandle">
+        </div>
+        <p class="undertext">*新用户送75元用车券</p>
+    </div>
+    <div class="daojishi" v-if="inApp && !begin">
+        <h3>距离活动开始还有：</h3>
+        <p class="timing">
+            <span>{{days}}</span>
+            <span>天</span>
+            <span>{{hours}}</span>
+            <span>时</span>
+            <span>{{minutes}}</span>
+            <span>分</span>
+            <span>{{seconds}}</span>
+            <span style="margin-right: 0">秒</span>
+        </p>
+    </div>
+    <div class="scroller" v-show="inApp && begin">
+        <div id="rollid" >
+            <div class="rollwrapper" id="list1">
+                <div class="list-item" v-for="(item,index) in luckyList">
+                    <span >{{item.cellphone}}&ensp;随机立减{{item.reduce_amount}}元</span>
+                </div>
+            </div>
+            <div class="rollwrapper" id="list2">
+                <div class="list-item" v-for="(item,index) in luckyList">
+                    <span >{{item.cellphone}}&ensp;随机立减{{item.reduce_amount}}元</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="underLine"></div>
+    <div class="rule">
+        <h3> <span></span>活动规则</h3>
+        <p v-if="!inApp">活动仅限易到APP内，马上用车订单享受随机立减，预约用车、企业用车，出租车车型，不参加此活动。</p>
+        <p v-if="inApp">活动仅限马上用车订单享受随机立减，预约用车、企业用车，出租车车型不参加此活动</p>
+        <span><i>易到有权在法律允许的范围内进行解释。</i></span>
+    </div>
+    <div class="toast" v-show="telToast"><img src="//i1.Yongche.name/media/g1/M03/18/17/rBEAQ1qrhG-IMX0vAAAFZ5MoTHAAAJkagP_-ngAAAWI508.png" alt=""></div>
+    <div class="toast" v-show="picToast"><img src="//i2.Yongche.name/media/g1/M03/1E/0C/rBEAQ1qrhISIPSAAAAAGnYjf7AYAAL2CgP_7WwAAAa1964.png" alt=""></div>
+    <div class="picCode showPicCode">
+        <div class="wrapper">
+            <div class="on-code clearfix">
+                <p class="on-input on-input-code"><input name="code" type="text" v-model="imgNumber" placeholder="请输入图片验证码" maxlength="4"></p>
+                <p class="getImageCodeUrl">
+                    <img src="https://market.yongche.com/activity/Webuser/getCaptcha" class="imgCode">
+                    <span class="refreshpic" @click="transImg"></span>
+                </p>
+            </div>
+            <div class="sure" @click="checkPiccode">确定</div>
+        </div>
+        <div class="close"><img src="//i3.Yongche.name/media/g2/M02/1C/0A/rBEBP1qrhJ2IeEMPAAAD8xFyqscAAK9TwP_--cAAAQZ420.png" alt="" @click="closePic"></div>
+    </div>
+    <div class="success picCode" v-show="successLogin" style="z-index: 100">
+        <div class="wrapperbox">
+            <div><img src="//i3.Yongche.name/media/g2/M02/1D/12/rBEBJVqrhMKIauRdAAAF1h5CFKoAALZcQJIQkQAAAXu431.png" alt=""></div>
+            <p>报名成功</p>
+            <div class="togo" @click="goApp">{{!!begin?'去打车':'打开APP'}}</div>
+        </div>
+    </div>
+
+
+</div>
+<iframe src="" id="share_iframe"></iframe>
+<script src="https://i3.Yongche.name/s/js/201711/vue.min.js?1478153218"></script>
+<script src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+<script src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    function ajaxShare(obj) {
+        // 分享变量设置
+        var _protocolLink = "yongche://share?";
+        var _protocolLinkFriend = "yongche://shareToFriend?";
+        var _protocolLinkTimeline = "yongche://shareToTimeline?";
+
+        // 分享地址
+        //var query = encodeURIComponent("&language="+obj.activity_language+"&sendName="+obj.sendName+"&sendMoney="+obj.sendMoney+"&sendIphone="+obj.sendIphone+"&headImg="+obj.headImg);
+        var shareRead_link = encodeURIComponent(obj.url);
+
+        // 分享的图片
+        var shareRead_pics = encodeURIComponent("http://i1.yongche.Name/media/g1/M04/1E/0C/rBEAQ1qrhYKIZs0MAAAY0hktqOYAAL2DwE0jLkAABjq727.jpg");
+
+        // 分享的标题
+        var shareRead_title = encodeURIComponent(obj.title);
+        // 分享的内容
+        var shareRead_content = encodeURIComponent(obj.description);
+        // 分享的需要生成二维码地址
+        var shareRead_codeUrl = encodeURIComponent("://m.yongche.com");
+        var shareRead_sourceType = 42; //1-截图分享 42-图文分享
+        var shareRead_callback = "share_callback";
+
+        var Tools = {
+            shareThisPage: function () {
+                var _str = "link=" + shareRead_link + "&pics=" + shareRead_pics + "&title=" + shareRead_title + "&content=" + shareRead_content + "&sourceType=" + shareRead_sourceType + "&callback=" + shareRead_callback + "&codeUrl=" + shareRead_codeUrl;
+                var _tmpOpenLink = _protocolLink + _str;
+                window.location.href = _tmpOpenLink;
+            },
+            shareThisPageToFriend: function () {
+                var _str = "link=" + shareRead_link + "&pics=" + shareRead_pics + "&title=" + shareRead_title + "&content=" + shareRead_content + "&sourceType=" + shareRead_sourceType + "&callback=" + shareRead_callback + "&codeUrl=" + shareRead_codeUrl;
+                var _tmpOpenLink = _protocolLinkFriend + _str;
+                window.location.href = _tmpOpenLink;
+            },
+            shareThisPageToTimeline: function () {
+                var _str = "link=" + shareRead_link + "&pics=" + shareRead_pics + "&title=" + shareRead_title + "&content=" + shareRead_content + "&sourceType=" + shareRead_sourceType + "&callback=" + shareRead_callback + "&codeUrl=" + shareRead_codeUrl;
+                var _tmpOpenLink = _protocolLinkTimeline + _str;
+                window.location.href = _tmppenLOink;
+            }
+        };
+        var _str = "link=" + shareRead_link + "&pics=" + shareRead_pics + "&title=" + shareRead_title + "&content=" + shareRead_content + "&sourceType=" + shareRead_sourceType + "&from=iframe&callback=" + shareRead_callback;
+        var _tmpOpenLink = _protocolLink + _str;
+        document.getElementById("share_iframe").src = _tmpOpenLink;
+//        $('.share').delegate('.share-btn', 'click', function() {
+//            ga('send', 'event', 'share_button', 'click', 'shareClickChristmas');
+//            Tools.shareThisPage();
+//        });
+//        document.getElementById("share-btn").addEventListener("click", function(){
+//            ga('send', 'event', 'share_button', 'click', 'shareClickChristmas');
+//            Tools.shareThisPage();
+//        });
+
+    }
+
+    ajaxShare({
+        url: window.location.href,
+        title: '用易到打车，单单立减，最高免单',
+        description: '100%订单随机立减'
+    });
+</script>
+<script>
+    (function ($) {
+        $.fn.wxShare = function (oParam) {
+            var shareImg = oParam.shareImg;
+            var shareTitle = oParam.shareTitle;
+            var shareContent = oParam.shareContent;
+            var shareUrl = oParam.shareUrl;
+            $.ajax({
+                url: "//weixin.yongche.com/wechat/jssdk/config?url=" + encodeURIComponent(window.location.href),
+                method: 'get',
+                dataType: 'jsonp'
+            }).done(function (data) {
+                console.log(data);
+                if (data.code == 200) {
+                    wx_share(data.result);
+                }
+            }).fail(function (error) {
+                //console.log(error)
+            });
+
+            function wx_share(jsData) {
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: jsData.appId, // 必填，公众号的唯一标识
+                    timestamp: jsData.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: jsData.nonceStr, // 必填，生成签名的随机串
+                    signature: jsData.signature,// 必填，签名，见附录1
+                    jsApiList: ['onMenuShareAppMessage', 'onMenuShareTimeline', 'onMenuShareQQ', 'onMenuShareWeibo'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                });
+                wx.ready(function () {
+                    var shareData =
+                        {
+                            link: shareUrl,
+                            imgUrl: shareImg,
+                            title: shareTitle,
+                            desc: shareContent,
+                            type: '', // 分享类型,music、video或link，不填默认为link
+                            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                            success: function () {
+                                // 用户确认分享后执行的回调函数
+                            },
+                            cancel: function () {
+                                // 用户取消分享后执行的回调函数
+                            }
+                        };
+                    wx.onMenuShareAppMessage(shareData);
+                    wx.onMenuShareTimeline(shareData);
+                    wx.onMenuShareQQ(shareData);
+                    //alert('ok');
+                });
+            }
+        }
+
+        window.wxShareFn = function (oParam) {
+            $.fn.wxShare(oParam);
+        }
+
+    })(jQuery);
+</script>
+<script type="text/javascript">
+
+    new Vue({
+        el: '#app',
+        data: {
+            inApp: '',
+            begin: '',
+            telNumber:'',
+            codeNumber:'',
+            telToast:false,
+            picToast:false,
+            imgNumber:'',
+            ifBegin:'',
+            successLogin:'',
+            days:'',
+            hours:'',
+            minutes:'',
+            seconds:'',
+            offset:'',
+            interval:'',
+            get_msgcode:'',
+            need_imgcode:0,
+            luckyList:[],
+            luckyList2:[]
+        },
+        mounted: function () {
+            this.MyMar = '';
+            this.MyHar = '';
+            this.get_msgcode=$(".get-msgcode");
+            this.showPicCode=$(".showPicCode")
+            //var isYidao = document.cookie.indexOf("_app_token_v3");
+            var u = window.navigator.userAgent;
+            //isYidao = 1; //TODO
+            if (u.indexOf("YongChe")> -1) {
+                this.inApp = true;
+            } else {
+                this.inApp = false;
+            }
+             //this.inApp = true;//TODO
+            this.initData();
+            //      微信二次分享
+            var wShare = {};
+            wShare.shareImg = 'http://i1.yongche.Name/media/g1/M04/1E/0C/rBEAQ1qrhYKIZs0MAAAY0hktqOYAAL2DwE0jLkAABjq727.jpg';
+            wShare.shareTitle = '用易到打车，单单立减，最高免单';
+            wShare.shareContent = '100%订单随机立减';
+            wShare.shareUrl = window.location.href;
+            wxShareFn(wShare);
+        },
+        methods: {
+            initData: function () {//
+                var vm = this;
+                $.ajax({
+                    type: 'get',
+                    url: 'https://h5.yongche.com/ajax/BalanceTransfer/getOrderRandomReduceList?amount=5&page=1&pageSize=20',
+                   // url: 'https://testing-h5.yongche.Org/ajax/BalanceTransfer/getOrderRandomReduceList?amount=5&page=1&pageSize=20',
+                    dataType: 'jsonp',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function (data) {
+                       if(data.code==200){
+                            vm.luckyList=data.result;
+                            vm.offset = (new Date(2018,02,26,26,34,00)).getTime()/1000 - data.now_time; //计算剩余的秒数
+                            vm.begin=vm.offset>0?false:true;
+                            console.log(vm.offset)
+                           if(vm.inApp && vm.begin){
+                               vm.toroll();
+                           }
+                           if(!vm.inApp && vm.begin){
+                               vm.toPanelRoll();
+                           }
+                           if(vm.inApp && !vm.begin){
+                               vm.leftTimer();
+                           }
+
+                       }
+
+                    },
+                    error: function (err) {
+                        alert(err.msg)
+                    }
+                })
+
+            },
+            getCode:function () {
+                if (!(/^1[3|4|5|6|7|8][0-9]\d{4,8}$/.test(this.telNumber))) {
+                    alert('请输入正确的手机号');
+                    return false;
+                }
+                if (this.need_imgcode == 1) {//需要图形验证码
+                    if (!this.imgNumber) {
+                        this.showPicCode.css({"z-index":10,'opacity':1});
+                        this.transImg()
+                        return false;
+                    }
+                    if (this.checkMobile(this.telNumber)) {
+                        this.countdowndown();
+                        this.checkCode();
+                    } else {
+                        alert('请输入正确手机号')
+                    }
+                }
+
+                if (this.need_imgcode == 0) {//不需要图形验证码
+                    if (this.checkMobile(this.telNumber)) {
+                        this.countdowndown();
+                        this.checkCode();
+                    } else {
+                        alert('请输入正确手机号')
+                    }
+                }
+            },
+            sureHandle:function () {
+                var vm=this;
+                if (!vm.checkMobile(vm.telNumber)) {
+                    alert('请输入正确手机号');
+                    return fasle;
+                }
+//                if (vm.need_imgcode == 1) {
+//                    if (!vm.imgNumber) {
+//                        this.showPicCode.css("z-index",10);
+//                        //alert('请输入图形验证码');
+//                        return false;
+//                    }
+//                }
+                if (!vm.codeNumber) {
+                    alert('请输入短信验证码');
+                    return false;
+                }
+                $.ajax({
+                    url: 'https://market.yongche.com/activity/Webuser/Login?cellphone='+vm.telNumber+'&code='+vm.codeNumber+'&captcha='+vm.imgNumber,
+                    type: 'get',
+                    dataType: 'jsonp',
+                    success: function (data) {
+                        console.log(data);
+                        if(data.code==200){//登录成功
+                            vm.successLogin=true;
+                        }else{
+                            vm.telToast=true;
+                            setTimeout(function () {
+                                vm.telToast=false;
+                            },2000)
+                        }
+                    },
+                    error: function (err) {
+                        alert('网络异常')
+                    }
+                })
+            },
+            checkMobile:function (number) {
+                if (!(/^1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9]|6[8])\d{8}$/.test(number))) {
+                    return false;
+                }
+                return true;
+            },
+            countdowndown:function () {
+                var vm=this;
+                var count = 59;
+                var countdown = setInterval(CountDown, 1000);
+                vm.get_msgcode.attr("disabled", true);
+                function CountDown() {
+                   // vm.get_msgcode.attr("disabled", true);
+                    vm.get_msgcode.css("background", "#999");
+                    vm.get_msgcode.val(count + "s");
+                    if (count == 0) {
+                        vm.get_msgcode.val("获取验证码").removeAttr("disabled");
+                        vm.get_msgcode.css("background", "#fe813e");
+                        clearInterval(countdown);
+                    }
+                    count--;
+                }
+            },
+            checkCode:function () {
+                var vm=this;
+                $.ajax({
+                    type: 'get',
+                    url: 'https://market.yongche.com/activity/Webuser/getCode?cellphone=' + vm.telNumber + '&captcha=' + vm.imgNumber,
+                    dataType: 'jsonp',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.code == 401) {
+                            vm.need_imgcode = 1;
+                            vm.showPicCode.css({"z-index":10,'opacity':1});
+                        } else if (data.code == 200) {
+
+                        } else if (data.code == 429) {
+                            if (vm.need_imgcode == 1) {
+                                vm.transImg()
+                            }
+                            alert('请求次数过多,请稍后重试')
+                        } else if (data.code == 400) {
+                            //alert('图形验证码错误');
+                            vm.showPicCode.css({"z-index":10,'opacity':1});
+                            if (data.isUpdate == 1) {
+                                vm.transImg()
+                                console.log('imgneedupdate')
+                            }
+                        } else if (data.code == 449) {
+                            alert('请求太频繁');
+                            if (vm.need_imgcode == 1) {
+                                $(".imgcode").attr('src', 'https://market.yongche.com/activity/Webuser/getCaptcha?t=' + new Date().getTime());
+                            }
+                        }
+                    },
+                    error: function (err) {
+                        alert(err.msg)
+                    }
+                })
+            },
+            transImg:function () {
+                $(".imgCode").attr('src', 'https://market.yongche.com/activity/Webuser/getCaptcha?t=' + new Date().getTime());
+            },
+            checkPiccode:function () {
+                if (!this.imgNumber) {
+                    alert('请输入图形验证码');
+                    return false;
+                }
+                var vm=this;
+                $.ajax({
+                    type: 'get',
+                    url: 'https://market.yongche.com/activity/Webuser/getCode?cellphone=' + vm.telNumber + '&captcha=' + vm.imgNumber,
+                    dataType: 'jsonp',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function (data) {
+                        if (data.code == 400) {
+                            vm.picToast=true;
+                            setTimeout(function () {
+                                vm.picToast=false;
+                            },2000)
+                            if (data.isUpdate == 1) {
+                                vm.transImg()
+                                console.log('imgneedupdate')
+                            }
+                        }else {
+                                    vm.showPicCode.css({"z-index":-1,'opacity':0});
+                                    if (data.code == 429){
+                                        alert('请求次数过多,请稍后重试')
+                                    }
+                                }
+                    },
+                    error: function (err) {
+                        alert(err.msg)
+                    }
+                })
+            },
+            closePic:function () {
+                this.showPicCode.css({"z-index":-1,'opacity':0});
+            },
+            leftTimer:function () {
+                var vm=this;
+                var days,hours,minutes,seconds;
+                function count() {
+                    days = parseInt(vm.offset / 60 / 60 / 24 ); //计算剩余的天数
+                    hours = parseInt(vm.offset  / 60 / 60 % 24 ); //计算剩余的小时
+                    minutes = parseInt(vm.offset / 60 % 60);//计算剩余的分钟
+                    seconds = parseInt(vm.offset  % 60);//计算剩余的秒数
+                    vm.days = checkTime(days);
+                    vm.hours = checkTime(hours);
+                    vm.minutes = checkTime(minutes);
+                    vm.seconds = checkTime(seconds);
+                }
+                count()
+                function checkTime(i){ //将0-9的数字前面加上0，例1变为01
+                    if(i<10)
+                    {
+                        i = "0" + i;
+                    }
+                    return i;
+                }
+                vm.interval=setInterval(function () {
+                    vm.offset--;
+                    if(vm.offset<=0){
+                        clearInterval(vm.interval);
+                        vm.initData();
+                    }
+                    count()
+                },1000);
+            },
+            toroll: function () {
+                var vm=this;
+                if (this.MyMar) {
+                    clearInterval(this.MyMar)
+                }
+                var speed = 2000;
+                var list = document.getElementById('list1');
+                var rule = document.getElementById('rollid');
+                function Marquee() {
+                    if(rule.scrollTop>=(vm.luckyList.length-6)*56){
+                        vm.initData();
+                        rule.scrollTop-=list.offsetHeight;
+                        $('#rollid').animate({"scrollTop":"+=56px"}, "slow");
+                    }else {
+                        $('#rollid').animate({"scrollTop":"+=56px"}, "slow");
+                    }
+                }
+
+                this.MyMar = setInterval(Marquee, speed);
+            },
+            toPanelRoll:function () {
+                var vm=this;
+                var speed=10;
+                if (this.MyHar) {
+                    clearInterval(this.MyHar)
+                }
+                var scroll_begin = document.getElementById("scroll_begin");
+                var scroll_div = document.getElementById("panelScroll");
+                function Marquee2(){
+                    if(scroll_begin.offsetWidth-scroll_div.scrollLeft<=0){
+                        vm.initData();
+                        scroll_div.scrollLeft-=scroll_begin.offsetWidth;
+                    }else{
+                        scroll_div.scrollLeft++;
+                    }
+                }
+                vm.MyHar=setInterval(Marquee2,speed);
+            },
+            goApp:function () {
+                var u = navigator.userAgent;
+                var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+                var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+                if (isiOS) {
+                    window.location = "yongche://";
+                    setTimeout(function () {
+                        window.location = "https://itunes.apple.com/cn/app/yi-dao-yong-che-wan-liang/id427555239?mt=8";
+                    }, 1000);
+                } else if (isAndroid) {
+                    var nativeUrl = "yongche://user.com";
+                    var nativeUrlD ='http://www.yongche.com/download/yongche.php?source=';
+                    window.location.href = nativeUrl;
+                    setTimeout(function() {
+                        window.location.href = nativeUrlD;
+                    }, 1000);
+                } else {
+                    alert('请在手机中打开')
+                }
+            }
+        }
+    })
+
+
+</script>
+
+</body>
+</html>
